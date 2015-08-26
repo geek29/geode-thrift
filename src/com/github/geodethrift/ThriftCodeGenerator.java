@@ -22,6 +22,18 @@ public class ThriftCodeGenerator {
 		/*System.out.println("Method Name : start gateway-sender : " + getProperName("start gateway-sender", true) );
 		System.out.println("Struct Name : start gateway-sender : " + getProperName("start gateway-sender", false) );*/
 		
+		/*
+		 https://github.com/gemfire/node-gemfire/blob/master/doc/api.md
+		 CacheService
+		 	getVersion
+		 	createRegion(name,options)
+		 	executeFunction(name,options)
+		 	executeQuery
+		 	getRegionAttributes
+		 	get/put/remove/query
+		  
+		  
+		 */
 		
 	}
 	
@@ -34,10 +46,16 @@ public class ThriftCodeGenerator {
 
 	private static void iterateCommands(CommandManager mgr) {
 		Map<String,CommandTarget> commandMap = mgr.getCommands();
+		StringBuilder sb = new StringBuilder("service GeodeCommandService {");
 		for(String command : commandMap.keySet()) {
 			CommandTarget tgr = commandMap.get(command);
 			processCommand(tgr);
+			sb.append("\n\tCommandResult ").append(getProperName(tgr.getCommandName(), true));
+			sb.append("(").append("1:").append(getProperName(tgr.getCommandName(), false));
+			sb.append(" args) throws (1:ComandExeception)");
 		}
+		sb.append("\n}");
+		System.out.println("\n Service\n"+ sb.toString());
 	}
 
 

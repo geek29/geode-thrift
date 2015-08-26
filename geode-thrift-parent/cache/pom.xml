@@ -9,10 +9,10 @@
 		<artifactId>geode-thrift-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-  <artifactId>codegen</artifactId>
+  <artifactId>cache</artifactId>
   <packaging>jar</packaging>
 
-  <name>Thrift IDL Generator for geode commands</name>
+  <name>Thrift Handler for Geode Cache Operations</name>
 
   <build>
     <pluginManagement>

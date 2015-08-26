@@ -1,4 +1,4 @@
-package com.github.geodethrift;
+package com.github.geek29.geodethrift.server;
 
 import java.util.Properties;
 
@@ -13,37 +13,8 @@ import com.gemstone.gemfire.cache.CacheFactory;
 import com.gemstone.gemfire.distributed.DistributedSystem;
 import com.gemstone.gemfire.internal.cache.GemFireCacheImpl;
 import com.gemstone.gemfire.management.ManagementService;
-
-public class ThriftServer {
-
-	public static void main(String[] args) {
-
-		try {
-			startGemFire();
-			GemfireManagement.Processor processor = new GemfireManagement.Processor(new GeodeManagementServer());
-			TServerTransport serverTransport = new TServerSocket(9090);
-			TServer server = new TSimpleServer(
-					new Args(serverTransport).processor(processor));
-			System.out.println("Starting the simple server...");
-			server.serve();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	private static void startGemFire() {
-		Properties pr = new Properties();
-		pr.put("jmx-manager", "true");
-		pr.put("jmx-manager-start", "true");
-		DistributedSystem ds = DistributedSystem.connect(pr);
-		Cache cache = new CacheFactory().create();
-		GemFireCacheImpl impl = (GemFireCacheImpl)cache;
-		ManagementService service = ManagementService.getManagementService(cache);
-		System.out.println("Manager started ??" +service.isManager());
-	}
-}
-
+import com.github.geek29.geodethrift.management.GeodeManagementHandler;
+import com.github.geek29.geodethrift.management.service.GeodeCommandService;
 
 /** Multiplexing Thrift Services 
 
@@ -81,4 +52,36 @@ Sample Usage - Server
 	server.serve();
 
 */
+public class Server {
+
+	public static void main(String[] args) {
+
+		try {
+			startGemFire();
+			GeodeCommandService.Processor processor = new GeodeCommandService.Processor(new GeodeManagementHandler());
+			TServerTransport serverTransport = new TServerSocket(9090);
+			TServer server = new TSimpleServer(
+					new Args(serverTransport).processor(processor));
+			System.out.println("Starting the simple server...");
+			server.serve();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private static void startGemFire() {
+		Properties pr = new Properties();
+		pr.put("jmx-manager", "true");
+		pr.put("jmx-manager-start", "true");
+		DistributedSystem ds = DistributedSystem.connect(pr);
+		Cache cache = new CacheFactory().create();
+		GemFireCacheImpl impl = (GemFireCacheImpl)cache;
+		ManagementService service = ManagementService.getManagementService(cache);
+		System.out.println("Manager started ??" +service.isManager());
+	}
+}
+
+
+
 

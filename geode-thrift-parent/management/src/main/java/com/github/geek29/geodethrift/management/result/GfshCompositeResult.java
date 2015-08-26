@@ -1,9 +1,11 @@
-package com.github.geodethrift.cli.result;
+package com.github.geek29.geodethrift.management.result;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GfshCompositeResult
@@ -15,17 +17,16 @@ public class GfshCompositeResult
 
   private List<GfshSectionResult> sections = new ArrayList();
 
-  public GfshCompositeResult(JSONObject data)
+  public GfshCompositeResult(JSONObject data) throws JSONException
   {
     this.jsonObject = data;
     build();
   }
 
-  private void build()
-  {
-    Set keys = this.jsonObject.keySet();
+  private void build() throws JSONException
+  {    
     this.sectionNames = new ArrayList();
-    for (Iterator localIterator = keys.iterator(); localIterator.hasNext(); ) { Object k = localIterator.next();
+    for (Iterator localIterator = this.jsonObject.keys(); localIterator.hasNext(); ) { Object k = localIterator.next();
       if (k.toString().contains(GfshSectionResult.pattern)) {
         this.sectionNames.add(k.toString());
         this.sections.add(GfshResult.createSection(this.jsonObject, k.toString()));

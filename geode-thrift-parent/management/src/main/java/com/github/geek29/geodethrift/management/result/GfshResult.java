@@ -1,9 +1,11 @@
-package com.github.geodethrift.cli.result;
+package com.github.geek29.geodethrift.management.result;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GfshResult
@@ -19,13 +21,13 @@ public class GfshResult
   private String when = null;
   private GfshResultContent content = null;
 
-  public GfshResult(String json) {
+  public GfshResult(String json) throws JSONException {
     this.jsonString = json;
     this.jsonObject = new JSONObject(json);
     build();
   }
 
-  private void build() {
+  private void build() throws JSONException {
     this.contentType = this.jsonObject.getString("contentType");
     this.version = this.jsonObject.getString("version");
     this.sender = this.jsonObject.getString("sender");
@@ -35,7 +37,7 @@ public class GfshResult
     buildData();
   }
 
-  private void buildData() {
+  private void buildData() throws JSONException {
     JSONObject object = this.jsonObject.getJSONObject("data");
     this.content = new GfshResultContent(object, this.contentType);
   }
@@ -82,7 +84,7 @@ public class GfshResult
     return stringBuilder.toString();
   }
 
-  public static void main(String[] args) throws IOException
+  public static void main(String[] args) throws IOException, JSONException
   {
     String infoJson = readFile("/home/tushark/Downloads/info-result.json");
     String tableJson = readFile("/home/tushark/Downloads/tabular-result.json");
@@ -94,20 +96,20 @@ public class GfshResult
     toGfshResult(errorJson);
   }
 
-  private static void toGfshResult(String infoJson) {
+  private static void toGfshResult(String infoJson) throws JSONException {
     GfshResult result = new GfshResult(infoJson);
     System.out.println("contentType : " + result.getContentType());
     System.out.println("status : " + result.getStatus());
   }
 
-  public static GfshSectionResult createSection(JSONObject object, String key) {
+  public static GfshSectionResult createSection(JSONObject object, String key) throws JSONException {
     System.out.println("Creating section for key " + key);
     JSONObject section = object.getJSONObject(key);
     GfshSectionResult sectionResult = new GfshSectionResult(section);
     return sectionResult;
   }
 
-  public static String getString(JSONObject jsonObject, String key) {
+  public static String getString(JSONObject jsonObject, String key) throws JSONException {
     Object object = jsonObject.get(key);
     return stringify(object);
   }

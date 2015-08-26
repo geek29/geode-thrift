@@ -1,10 +1,12 @@
-package com.github.geodethrift.cli.result;
+package com.github.geek29.geodethrift.management.result;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GfshTableResult
@@ -14,19 +16,18 @@ public class GfshTableResult
   private List<String> colNames = null;
   private Object[][] data = null;
 
-  public GfshTableResult(JSONObject data)
+  public GfshTableResult(JSONObject data) throws JSONException
   {
     this.jsonObject = data;
     build();
   }
 
-  private void build() {
-    Set keys = this.jsonObject.keySet();
+  private void build() throws JSONException {    
     this.colNames = new ArrayList<String>();
 
     int maxRows = 0;
     JSONArray array;
-    for (Iterator localIterator = keys.iterator(); localIterator.hasNext(); ) { Object k = localIterator.next();
+    for (Iterator localIterator = this.jsonObject.keys(); localIterator.hasNext(); ) { Object k = localIterator.next();
       this.colNames.add(k.toString());
       array = this.jsonObject.getJSONArray(k.toString());
       if (maxRows < array.length())

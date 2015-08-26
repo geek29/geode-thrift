@@ -1,4 +1,4 @@
-package com.github.geodethrift;
+package com.github.geek29.geodethrift.codegen;
 
 import java.io.FileWriter;
 import java.io.IOException;

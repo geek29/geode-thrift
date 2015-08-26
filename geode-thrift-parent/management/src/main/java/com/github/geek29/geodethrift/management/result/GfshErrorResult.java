@@ -1,6 +1,7 @@
-package com.github.geodethrift.cli.result;
+package com.github.geek29.geodethrift.management.result;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GfshErrorResult
@@ -9,12 +10,12 @@ public class GfshErrorResult
   private int errorCode;
   private String[] messageArray = null;
 
-  public GfshErrorResult(JSONObject content) {
+  public GfshErrorResult(JSONObject content) throws JSONException {
     this.jsonObject = content;
     build();
   }
 
-  private void build() {
+  private void build() throws JSONException {
     if (this.jsonObject.has("errorCode"))
       this.errorCode = this.jsonObject.getInt("errorCode");
     JSONArray infoMessageArray = this.jsonObject.getJSONArray("message");

@@ -1,5 +1,6 @@
-package com.github.geodethrift.cli.result;
+package com.github.geek29.geodethrift.management.result;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GfshResultContent
@@ -14,13 +15,13 @@ public class GfshResultContent
   private GfshCompositeResult compositeResult = null;
   private GfshErrorResult errorResult = null;
 
-  public GfshResultContent(JSONObject data, String type) {
+  public GfshResultContent(JSONObject data, String type) throws JSONException {
     this.jsonObject = data;
     this.type = type;
     build(type);
   }
 
-  private void build(String type) {
+  private void build(String type) throws JSONException {
     this.content = this.jsonObject.getJSONObject("content");
     this.footer = this.jsonObject.getString("footer");
     this.header = this.jsonObject.getString("header");
@@ -34,12 +35,12 @@ public class GfshResultContent
       buildErrorContent(this.content);
   }
 
-  private void buildErrorContent(JSONObject content)
+  private void buildErrorContent(JSONObject content) throws JSONException
   {
     this.errorResult = new GfshErrorResult(content);
   }
 
-  private void buildCompositeContent(JSONObject content) {
+  private void buildCompositeContent(JSONObject content) throws JSONException {
     this.compositeResult = new GfshCompositeResult(content);
   }
 
@@ -47,11 +48,11 @@ public class GfshResultContent
     return this.compositeResult;
   }
 
-  private void buildTableContent(JSONObject content) {
+  private void buildTableContent(JSONObject content) throws JSONException {
     this.tableResult = new GfshTableResult(content);
   }
 
-  private void buildInfoContent(JSONObject content) {
+  private void buildInfoContent(JSONObject content) throws JSONException {
     this.infoResult = new GfshInfoResult(content);
   }
 

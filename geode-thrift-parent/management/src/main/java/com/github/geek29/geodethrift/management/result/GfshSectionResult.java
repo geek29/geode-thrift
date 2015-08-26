@@ -1,4 +1,4 @@
-package com.github.geodethrift.cli.result;
+package com.github.geek29.geodethrift.management.result;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class GfshSectionResult
@@ -20,12 +22,12 @@ public class GfshSectionResult
   private List<GfshTableResult> tables = new ArrayList();
   private Map<String, String> sectionMap = new HashMap();
 
-  public GfshSectionResult(JSONObject data) {
+  public GfshSectionResult(JSONObject data) throws JSONException {
     this.jsonObject = data;
     build();
   }
 
-  private void build() {
+  private void build() throws JSONException {
     Iterator iterator = this.jsonObject.keys();
     while (iterator.hasNext()) {
       String key = (String)iterator.next();

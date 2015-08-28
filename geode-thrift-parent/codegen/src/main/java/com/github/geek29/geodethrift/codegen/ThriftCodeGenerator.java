@@ -20,7 +20,12 @@ import com.gemstone.gemfire.management.internal.cli.parser.CommandTarget;
 import com.gemstone.gemfire.management.internal.cli.parser.Option;
 
 /*
+ * TODO: Specify unspecified default value
  * TODO: Replace manual string build by some sort of templating lang - velocity
+ * TODO : 
+ * 	maintain some persistent structure which can help generate diff so that only
+ *  commands which are added new or have new options need to be written in structs.thrit
+ *  and service.thrift
  * 
  */
 public class ThriftCodeGenerator {
@@ -200,6 +205,13 @@ public class ThriftCodeGenerator {
 				structString.append("\t").append(paramNumber++).append(":")
 						.append((option.isRequired() ? "" : "optional "))
 						.append(thriftType).append(" ").append(thriftName);
+				
+				String defaultValue = option.getUnspecifiedDefaultValue();
+				if(defaultValue!=null) {
+					//TODO Check for numeric or string and boolean
+					structString.append(" = ").append(defaultValue);
+				}
+				
 				if (i < options.size() - 1)
 					structString.append(",\n");
 				else

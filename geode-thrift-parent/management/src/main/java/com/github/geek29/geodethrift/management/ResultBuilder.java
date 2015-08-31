@@ -17,6 +17,7 @@ import com.github.geek29.geodethrift.management.commandResult.InfoResult;
 import com.github.geek29.geodethrift.management.commandResult.ResultContent;
 import com.github.geek29.geodethrift.management.commandResult.Section;
 import com.github.geek29.geodethrift.management.commandResult.TableResult;
+import com.github.geek29.geodethrift.management.commandResult.commandResultConstants;
 
 /**
  * ResultBuilder API : Converts Gfsh CommandResult Object to Thrift CommandResult
@@ -52,13 +53,13 @@ public class ResultBuilder {
 		content.footer = data.getFooter();		
 		JSONObject josncontent = data.getGfJsonObject().getInternalJsonObject().getJSONObject("content");
 		System.out.println("Outer content " + josncontent.toString(2));		
-		if ("info".equals(type))
+		if (commandResultConstants.INFO_RESULT.equals(type))
 	      content.infoResult = buildInfoContent(josncontent);
-	    else if ("table".equals(type))
+	    else if (commandResultConstants.TABULAR_RESULT.equals(type))
 	      content.tableResult = buildTableContent(josncontent);
-	    else if ("composite".equals(type))
+	    else if (commandResultConstants.COMPOSITE_RESULT.equals(type))
 	      content.compositeResult = buildCompositeContent(josncontent);
-	    else if ("error".equals(type))
+	    else if (commandResultConstants.ERROR_RESULT.equals(type))
 	      content.errorResult = buildErrorContent(josncontent);			    
 		return content;
 	}

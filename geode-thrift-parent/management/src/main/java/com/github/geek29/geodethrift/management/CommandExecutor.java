@@ -19,6 +19,7 @@ import com.gemstone.gemfire.management.internal.cli.result.CommandResult;
  * TODO : Declare CommandException
  * TODO : Add default values for fields in structs
  * TODO : Support binary data types used in Deploy and other commands
+ * TODO : Add CommandStatus constants in Thrift
  * @author tushark
  *
  */

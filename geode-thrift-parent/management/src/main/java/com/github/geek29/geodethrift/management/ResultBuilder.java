@@ -51,8 +51,7 @@ public class ResultBuilder {
 				com.github.geek29.geodethrift.management.commandResult.ResultContent();
 		content.header = data.getHeader();
 		content.footer = data.getFooter();		
-		JSONObject josncontent = data.getGfJsonObject().getInternalJsonObject().getJSONObject("content");
-		System.out.println("Outer content " + josncontent.toString(2));		
+		JSONObject josncontent = data.getGfJsonObject().getInternalJsonObject().getJSONObject("content");		
 		if (commandResultConstants.INFO_RESULT.equals(type))
 	      content.infoResult = buildInfoContent(josncontent);
 	    else if (commandResultConstants.TABULAR_RESULT.equals(type))

@@ -20,6 +20,8 @@ import com.gemstone.gemfire.management.internal.cli.result.CommandResult;
  * TODO : Add default values for fields in structs
  * TODO : Support binary data types used in Deploy and other commands
  * TODO : Add CommandStatus constants in Thrift
+ * TODO : Add methods in command service for things like member names, etc 
+ * 			to provide same facility as provided by GFSH auto-completion
  * @author tushark
  *
  */
@@ -95,7 +97,7 @@ public class CommandExecutor {
 					fieldValue = field.get(arguments);
 					String value = null;
 					if (fieldValue != null) {
-						value = fieldValue.toString();
+						value = stringValue(field,fieldValue);
 						map.put(field.getName(), value);
 					}					
 				} catch (IllegalArgumentException | IllegalAccessException e) {
@@ -104,6 +106,14 @@ public class CommandExecutor {
 			}
 		}
 		return map;
+	}
+	
+	private String stringValue(Field field, Object fieldValue) {
+		String value = fieldValue.toString();
+		if(field.getType().equals(String.class) && value.contains(" ")) {
+			return "\"" + value + "\"";
+		}
+		return value;
 	}
 
 }

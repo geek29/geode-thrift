@@ -24,6 +24,7 @@ import com.github.geek29.geodethrift.management.commandResult.CommandResult;
 import com.github.geek29.geodethrift.management.service.GeodeCommandService;
 import com.github.geek29.geodethrift.management.structs.GetArgs;
 import com.github.geek29.geodethrift.management.structs.PutArgs;
+import com.github.geek29.geodethrift.management.structs.QueryArgs;
 
 public class GeodeManagementHandlerTest {
 	
@@ -387,12 +388,21 @@ public class GeodeManagementHandlerTest {
 		}
 	}
 
-	/*
+	
 	@Test
 	public void testQuery() {
-		//fail("Not yet implemented");
+		try {
+			QueryArgs query = new QueryArgs();
+			query.query = "select * from /region1";
+			CommandResult result = handler.query(query);
+			System.out.println("Query Result " + result);
+			assertEquals(Status.OK.ordinal(), result.status);
+		} catch (TException e) {
+			fail(e.getMessage());
+		}
 	}
 
+	/*
 	@Test
 	public void testRebalance() {
 		//fail("Not yet implemented");

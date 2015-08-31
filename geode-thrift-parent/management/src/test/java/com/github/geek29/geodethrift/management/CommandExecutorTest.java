@@ -87,6 +87,11 @@ public class CommandExecutorTest {
 		assertTrue(map.containsKey("value"));
 		assertTrue(map.containsKey("region"));
 		assertTrue(map.containsKey("skipIfExists"));
+		
+		//test for string option value containing space
+		args.value = "Jon Snow is not dead";
+		map = executor.introspect(args);
+		assertEquals("\"Jon Snow is not dead\"",map.get("value"));
 	}
 	
 	@Test
@@ -98,7 +103,9 @@ public class CommandExecutorTest {
 		assertTrue(command.contains(" --key=k1"));
 		assertTrue(command.contains(" --value=v1"));
 		assertTrue(command.contains(" --region=/region1"));
-		assertTrue(command.contains(" --skip-if-exists=false"));		
+		assertTrue(command.contains(" --skip-if-exists=false"));
+		
+		
 	}
 	
 	@Test

@@ -1,7 +1,9 @@
 package com.github.geek29.geodethrift.management;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -11,12 +13,12 @@ import com.gemstone.gemfire.internal.cache.GemFireCacheImpl;
 import com.gemstone.gemfire.management.cli.CommandService;
 import com.gemstone.gemfire.management.cli.Result;
 import com.gemstone.gemfire.management.internal.cli.result.CommandResult;
-import com.github.geek29.geodethrift.management.result.GfshResult;
 
 /**
  * TODO : Cache all field introspection or do it at start-up
  * TODO : Declare CommandException
  * TODO : Add default values for fields in structs
+ * TODO : Support binary data types used in Deploy and other commands
  * @author tushark
  *
  */
@@ -24,31 +26,19 @@ public class CommandExecutor {
 	
 	private GemFireCacheImpl cache;
 	
-	private CommandExecutor(){
+	public CommandExecutor(){
 		cache = GemFireCacheImpl.getExisting();
 	}
 	/**
-	 * Here Objext -> JSON -> GfshResult -> Thrift 
-	 * so three time serialize-deserialize is happending avoid it
 	 * 
 	 * @param command
 	 * @param arguments
 	 * @return
 	 * @throws JSONException
 	 */
-	public GfshResult execute(String command, Object arguments) throws JSONException {
-		Map<String,String> args = introspect(arguments);
-		String cmdString = commandString(command,args);
-		CommandResult gfresult = executeCommandString(cmdString);
-		return new GfshResult(toJson(gfresult));
-	}
-
-	public String toJson(CommandResult gfresult) {
-		StringBuilder sb = new StringBuilder();
-		while(gfresult.hasNextLine()) {
-			sb.append(gfresult.nextLine());
-		}
-		return sb.toString();
+	public com.github.geek29.geodethrift.management.commandResult.CommandResult execute(String command, Object arguments) 
+			throws JSONException {		
+		return ResultBuilder.from(executeCommandString(commandString(command,introspect(arguments))));
 	}
 
 	public CommandResult executeCommandString(String cmdString) {
@@ -58,15 +48,43 @@ public class CommandExecutor {
 	}
 
 	public String commandString(String command, Map<String, String> args) {
+		if(args==null)
+			return command;
 		StringBuilder sb = new StringBuilder();
 		sb.append(command);
 		for(Entry<String,String> e : args.entrySet()) {
-			sb.append("--").append(e.getKey()).append("=").append(e.getValue());
+			sb.append(" --").append(hyphennize(e.getKey())).append("=").append(e.getValue());
 		}
 		return sb.toString();
 	}
 
+	private String hyphennize(String key) {
+		List<String> strList = new ArrayList<String>();
+		StringBuilder sb = new StringBuilder();
+		for(int i=0;i<key.length();i++) {
+			char c = key.charAt(i);
+			if(Character.isUpperCase(c)){
+				strList.add(sb.toString());
+				sb = new StringBuilder();
+				sb.append(Character.toLowerCase(c));
+			} else {
+				sb.append(c);
+			}
+		}
+		if(sb.length()>0)
+			strList.add(sb.toString());
+		sb = new StringBuilder();
+		for(int i=0;i<strList.size();i++) {
+			sb.append(strList.get(i));
+			if(i<strList.size()-1){
+				sb.append("-");
+			}
+		}
+		return sb.toString();
+	}
 	public Map<String, String> introspect(Object arguments) {
+		if(arguments==null)
+			return null;
 		Map<String, String> map = new HashMap<String, String>();
 		Class klass = arguments.getClass();
 		for (Field field : klass.getFields()) {

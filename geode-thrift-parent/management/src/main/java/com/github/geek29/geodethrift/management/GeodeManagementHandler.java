@@ -1,6 +1,7 @@
 package com.github.geek29.geodethrift.management;
 
 import org.apache.thrift.TException;
+import org.json.JSONException;
 
 import com.github.geek29.geodethrift.management.commandResult.CommandResult;
 import com.github.geek29.geodethrift.management.service.GeodeCommandService.Iface;
@@ -83,584 +84,494 @@ import com.github.geek29.geodethrift.management.structs.ValidateOfflineDiskStore
 import com.github.geek29.geodethrift.management.structs.VersionArgs;
 
 public class GeodeManagementHandler implements Iface {
+	
+	private CommandExecutor executor = null;
+	
+	public GeodeManagementHandler() {
+		executor = new CommandExecutor();
+	}
+	
+	private CommandResult execute(String cmd, Object args) throws TException {
+		try {
+			CommandResult result = executor.execute(cmd, args);
+			return result;
+		} catch(JSONException e) {
+			throw new TException(e.getMessage());
+		}
+	}
 
 	@Override
 	public CommandResult alterDiskStore(AlterDiskStoreArgs arguments)
-			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+			throws TException {		
+		return execute("alter disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult alterRegion(AlterRegionArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("alter region", arguments);
 	}
 
 	@Override
 	public CommandResult alterRuntime(AlterRuntimeArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("alter runtime ", arguments);
 	}
 
 	@Override
 	public CommandResult backupDiskStore(BackupDiskStoreArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("backup disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult changeLoglevel(ChangeLoglevelArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("change loglevel", arguments);
 	}
 
 	@Override
 	public CommandResult clearDefinedIndexes() throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("clear defined indexes", null);
 	}
 
 	@Override
 	public CommandResult closeDurableClient(CloseDurableClientArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("close durable-client", arguments);
 	}
 
 	@Override
 	public CommandResult closeDurableCq(CloseDurableCqArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("close durable-cq", arguments);
 	}
 
 	@Override
 	public CommandResult compactDiskStore(CompactDiskStoreArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("compact disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult compactOfflineDiskStore(
 			CompactOfflineDiskStoreArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("compact offline-disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult configurePdx(ConfigurePdxArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("configure pdx", arguments);
 	}
 
 	@Override
 	public CommandResult createAsyncEventQueue(
 			CreateAsyncEventQueueArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("create async-event-queue", arguments);
 	}
 
 	@Override
 	public CommandResult createDefinedIndexes(CreateDefinedIndexesArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("create defined indexes", arguments);
 	}
 
 	@Override
 	public CommandResult createDiskStore(CreateDiskStoreArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("create disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult createGatewayReceiver(
 			CreateGatewayReceiverArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("create gateway-receiver", arguments);
 	}
 
 	@Override
 	public CommandResult createGatewaySender(CreateGatewaySenderArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("create gateway-sender", arguments);
 	}
 
 	@Override
 	public CommandResult createHdfsStore(CreateHdfsStoreArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("create hdfs-store", arguments);
 	}
 
 	@Override
 	public CommandResult createIndex(CreateIndexArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("create index", arguments);
 	}
 
 	@Override
 	public CommandResult createRegion(CreateRegionArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("create region", arguments);
 	}
 
 	@Override
 	public CommandResult defineIndex(DefineIndexArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("define index", arguments);
 	}
 
 	@Override
 	public CommandResult describeConfig(DescribeConfigArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("describe config", arguments);
 	}
 
 	@Override
 	public CommandResult describeDiskStore(DescribeDiskStoreArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("describe disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult describeMember(DescribeMemberArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("describe member", arguments);
 	}
 
 	@Override
 	public CommandResult describeOfflineDiskStore(
 			DescribeOfflineDiskStoreArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("describe offline-disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult describeRegion(DescribeRegionArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("describe region", arguments);
 	}
 
 	@Override
 	public CommandResult destroyDiskStore(DestroyDiskStoreArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("destroy disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult destroyFunction(DestroyFunctionArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("destroy function", arguments);
 	}
 
 	@Override
 	public CommandResult destroyIndex(DestroyIndexArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("destroy index", arguments);
 	}
 
 	@Override
 	public CommandResult destroyRegion(DestroyRegionArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("destroy region", arguments);
 	}
 
 	@Override
 	public CommandResult encryptPassword(EncryptPasswordArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("encrypt password", arguments);
 	}
 
 	@Override
 	public CommandResult executeFunction(ExecuteFunctionArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("execute function", arguments);
 	}
 
 	@Override
 	public CommandResult exportClusterConfiguration(
 			ExportClusterConfigurationArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("export cluster-configuration", arguments);
 	}
 
 	@Override
 	public CommandResult exportConfig(ExportConfigArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("export config", arguments);
 	}
 
 	@Override
 	public CommandResult exportData(ExportDataArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("export data", arguments);
 	}
 
 	@Override
 	public CommandResult exportLogs(ExportLogsArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("export logs", arguments);
 	}
 
 	@Override
 	public CommandResult exportOfflineDiskStore(
 			ExportOfflineDiskStoreArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("export offline-disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult exportStackTraces(ExportStackTracesArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("export stack-traces", arguments);
 	}
 
 	@Override
 	public CommandResult gc(GcArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("gc", arguments);
 	}
 
 	@Override
 	public CommandResult get(GetArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("get", arguments);
 	}
 
 	@Override
 	public CommandResult help(HelpArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("help", arguments);
 	}
 
 	@Override
 	public CommandResult hint(HintArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("hint", arguments);
 	}
 
 	@Override
 	public CommandResult history(HistoryArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("history", arguments);
 	}
 
 	@Override
 	public CommandResult listAsyncEventQueues() throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list async-event-queues", null);
 	}
 
 	@Override
 	public CommandResult listClients() throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list clients", null);
 	}
 
 	@Override
 	public CommandResult listDeployed(ListDeployedArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list deployed", arguments);
 	}
 
 	@Override
 	public CommandResult listDiskStores() throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list disk-stores", null);
 	}
 
 	@Override
 	public CommandResult listDurableCqs(ListDurableCqsArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list durable-cqs", arguments);
 	}
 
 	@Override
 	public CommandResult listFunctions(ListFunctionsArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list functions", arguments);
 	}
 
 	@Override
 	public CommandResult listGateways(ListGatewaysArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list gateways", arguments);
 	}
 
 	@Override
 	public CommandResult listIndexes(ListIndexesArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list indexes", arguments);
 	}
 
 	@Override
 	public CommandResult listMembers(ListMembersArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list members", arguments);
 	}
 
 	@Override
 	public CommandResult listRegions(ListRegionsArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("list regions", arguments);
 	}
 
 	@Override
 	public CommandResult loadBalanceGatewaySender(
 			LoadBalanceGatewaySenderArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("load-balance gateway-sender", arguments);
 	}
 
 	@Override
 	public CommandResult locateEntry(LocateEntryArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("locate entry", arguments);
 	}
 
 	@Override
 	public CommandResult netstat(NetstatArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("netstat", arguments);
 	}
 
 	@Override
 	public CommandResult pauseGatewaySender(PauseGatewaySenderArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("pause gateway-sender", arguments);
 	}
 
 	@Override
 	public CommandResult pdxRename(PdxRenameArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("pdx rename", arguments);
 	}
 
 	@Override
 	public CommandResult put(PutArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("put", arguments);
 	}
 
 	@Override
 	public CommandResult query(QueryArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("query", arguments);
 	}
 
 	@Override
 	public CommandResult rebalance(RebalanceArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("rebalance", arguments);
 	}
 
 	@Override
 	public CommandResult remove(RemoveArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("remove", arguments);
 	}
 
 	@Override
 	public CommandResult resumeGatewaySender(ResumeGatewaySenderArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("resume gateway-sender", arguments);
 	}
 
 	@Override
 	public CommandResult revokeMissingDiskStore(
 			RevokeMissingDiskStoreArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("revoke missing-disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult setVariable(SetVariableArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("set variable", arguments);
 	}
 
 	@Override
 	public CommandResult showDeadLocks(ShowDeadLocksArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("show dead-locks", arguments);
 	}
 
 	@Override
 	public CommandResult showLog(ShowLogArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("show log", arguments);
 	}
 
 	@Override
 	public CommandResult showMetrics(ShowMetricsArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("show metrics", arguments);
 	}
 
 	@Override
 	public CommandResult showMissingDiskStores() throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("show missing-disk-stores", null);
 	}
 
 	@Override
 	public CommandResult showSubscriptionQueueSize(
 			ShowSubscriptionQueueSizeArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("show subscription-queue-size", arguments);
 	}
 
 	@Override
 	public CommandResult shutdown(ShutdownArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("shutdown", arguments);
 	}
 
 	@Override
 	public CommandResult statusClusterConfigService() throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("status cluster-config-service", null);
 	}
 
 	@Override
 	public CommandResult statusGatewayReceiver(
 			StatusGatewayReceiverArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("status gateway-receiver", arguments);
 	}
 
 	@Override
 	public CommandResult statusGatewaySender(StatusGatewaySenderArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("status gateway-sender", arguments);
 	}
 
 	@Override
 	public CommandResult statusLocator(StatusLocatorArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("status locator", arguments);
 	}
 
 	@Override
 	public CommandResult statusServer(StatusServerArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("status server", arguments);
 	}
 
 	@Override
 	public CommandResult stopGatewayReceiver(StopGatewayReceiverArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("stop gateway-receiver", arguments);
 	}
 
 	@Override
 	public CommandResult stopGatewaySender(StopGatewaySenderArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("stop gateway-sender", arguments);
 	}
 
 	@Override
 	public CommandResult stopLocator(StopLocatorArgs arguments)
 			throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("stop locator", arguments);
 	}
 
 	@Override
 	public CommandResult stopServer(StopServerArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("stop server", arguments);
 	}
 
 	@Override
 	public CommandResult undeploy(UndeployArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("undeploy", arguments);
 	}
 
 	@Override
 	public CommandResult upgradeOfflineDiskStore(
 			UpgradeOfflineDiskStoreArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("upgrade offline-disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult validateOfflineDiskStore(
 			ValidateOfflineDiskStoreArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
+		return execute("validate offline-disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult version(VersionArgs arguments) throws TException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/*private GemFireCacheImpl impl;
-	private CommandService service;
-
-	public GeodeManagementServer() {
-		impl = GemFireCacheImpl.getExisting();
-		service = CommandService.getUsableLocalCommandService();
-	}
-
-	@Override
-	public String execute(Command cmd) throws CommandException, TException {
-		try {
-			Result result = service.processCommand(cmd.command);
-			StringBuilder sb = new StringBuilder();
-			while (result.hasNextLine()) {
-				sb.append(result.nextLine());
-			}
-			return sb.toString();
-		} catch (Exception e) {
-			throw new CommandException(cmd.command, e.getMessage());
-		}
-	}*/
+		return execute("version", arguments);
+	}	
 
 }

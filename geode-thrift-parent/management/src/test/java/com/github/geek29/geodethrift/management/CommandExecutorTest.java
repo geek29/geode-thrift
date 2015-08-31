@@ -1,6 +1,8 @@
 package com.github.geek29.geodethrift.management;
 
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
@@ -14,10 +16,14 @@ import org.junit.Test;
 
 import com.gemstone.gemfire.cache.Cache;
 import com.gemstone.gemfire.cache.CacheFactory;
+import com.gemstone.gemfire.cache.RegionFactory;
+import com.gemstone.gemfire.cache.RegionShortcut;
 import com.gemstone.gemfire.distributed.DistributedSystem;
 import com.gemstone.gemfire.internal.cache.GemFireCacheImpl;
 import com.gemstone.gemfire.management.ManagementService;
+import com.gemstone.gemfire.management.cli.Result.Status;
 import com.gemstone.gemfire.management.internal.cli.CommandManager;
+import com.gemstone.gemfire.management.internal.cli.result.CommandResult;
 import com.github.geek29.geodethrift.management.structs.PutArgs;
 
 public class CommandExecutorTest {
@@ -31,9 +37,15 @@ public class CommandExecutorTest {
 		GemFireCacheImpl impl = (GemFireCacheImpl)cache;
 		ManagementService service = ManagementService.getManagementService(cache);
 		CommandManager manager = CommandManager.getExisting();
+		createRegion("region1", impl);
 		return manager;
 	}
 	
+	private static void createRegion(String name, GemFireCacheImpl impl) {
+		RegionFactory factory = impl.createRegionFactory(RegionShortcut.REPLICATE);
+		factory.create(name);		
+	}
+
 	private static void stopGemfire() {
 		GemFireCacheImpl.getExisting().close();	
 	}
@@ -54,6 +66,7 @@ public class CommandExecutorTest {
 
 	@After
 	public void tearDown() throws Exception {
+		
 	}
 	
 	private PutArgs createPut() {
@@ -82,10 +95,22 @@ public class CommandExecutorTest {
 		PutArgs args = 	createPut();
 		String command = executor.commandString("put", executor.introspect(args));		
 		assertTrue(command.contains("put"));
-		assertTrue(command.contains("--key=k1"));
-		assertTrue(command.contains("--value=v1"));
-		assertTrue(command.contains("--region=/region1"));
-		assertTrue(command.contains("--skipIfExists=false"));
+		assertTrue(command.contains(" --key=k1"));
+		assertTrue(command.contains(" --value=v1"));
+		assertTrue(command.contains(" --region=/region1"));
+		assertTrue(command.contains(" --skip-if-exists=false"));		
+	}
+	
+	@Test
+	public void testExecuteCommandString() {
+		CommandExecutor executor = new CommandExecutor();
+		PutArgs args = 	createPut();		
+		String command = executor.commandString("put", executor.introspect(args));
+		CommandResult result = (CommandResult) executor.executeCommandString(command);
+		Status st = result.getStatus();
+		assertEquals(Status.OK, st);
+		System.out.println("Resul " + result);
+		assertNotNull(result);
 	}
 
 }

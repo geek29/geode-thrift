@@ -37,6 +37,12 @@ public class ThriftCodeGenerator {
 	private static final String MGMT_SERVICE_THRIFT_FILE = "service.thrift";
 	private static final String MGMT_STRUCT_THRIFT_FILE = "structs.thrift";
 	private static final String MGMT_CMDRESULT_THRIFT_FILE = "commandResult.thrift";
+	
+	private static final String EXCEPTION_DECLARATION = "exception CommandException {\n"+
+					"1: i32 command,\n"+
+					"2: string reason\n"+
+					"}\n\n";
+	private static final String EXCEPTION_METHOD_SIGNATURE = " throws (1:CommandException cmdEx)";
 
 	private static Set<String> allKindsType = new HashSet<String>();
 	private static AtomicInteger argsCounter = new AtomicInteger();
@@ -82,7 +88,8 @@ public class ThriftCodeGenerator {
 		serviceString.append(MGMT_STRUCT_THRIFT_FILE).append("\"\n");
 		serviceString.append("include \"");
 		serviceString.append(MGMT_CMDRESULT_THRIFT_FILE).append("\"\n");
-		serviceString.append("namespace java ").append(MGMT_SERVICE_PACKAGE).append("\n");		
+		serviceString.append("namespace java ").append(MGMT_SERVICE_PACKAGE).append("\n");
+		serviceString.append(EXCEPTION_DECLARATION);
 		serviceString.append("\nservice GeodeCommandService {\n");
 		
 		StringBuilder structString = new StringBuilder();
@@ -100,14 +107,14 @@ public class ThriftCodeGenerator {
 						serviceString.append("\n\tcommandResult.CommandResult ").append(getProperName(tgr.getCommandName(), METHOD_NAME));
 						serviceString.append("(").append("1:structs.").append(getProperName(tgr.getCommandName(), STRUCT_NAME));
 						serviceString.append(" arguments)");
-						//serviceString.append(" arguments) throws (1:ComandExeception cmdEx)");
+						serviceString.append(EXCEPTION_METHOD_SIGNATURE);
 						if(size>1)
 							serviceString.append(",");
 					}					
 				} else {
 					serviceString.append("\n\tcommandResult.CommandResult ").append(getProperName(tgr.getCommandName(), METHOD_NAME));
-					//serviceString.append("() throws (1:CommandExeception cmdEx)");
 					serviceString.append("()");
+					serviceString.append(EXCEPTION_METHOD_SIGNATURE);
 					if(size>1)
 						serviceString.append(",");
 				}				
@@ -207,9 +214,9 @@ public class ThriftCodeGenerator {
 						.append(thriftType).append(" ").append(thriftName);
 				
 				String defaultValue = option.getUnspecifiedDefaultValue();
-				if(defaultValue!=null) {
-					//TODO Check for numeric or string and boolean
-					structString.append(" = ").append(defaultValue);
+				if(defaultValue!=null && isNumericStringOrBoolean(option.getDataType())) {
+					//Check for numeric or string and boolean dont allow collections
+					structString.append(" = ").append(quoteStringOptionValue(defaultValue, option.getDataType()));
 				}
 				
 				if (i < options.size() - 1)
@@ -219,13 +226,41 @@ public class ThriftCodeGenerator {
 
 				allKindsType.add(option.getDataType().getSimpleName());
 			}
-			structString.append("\n}");
+			structString.append("\n}\n");
 			structFile.append(structString.toString());
 			return true;
 		} catch (RuntimeException e) {
-			System.out.println("Command " + commandTarget.getCommandName() + " not supported");
+			System.out.println("Command " + commandTarget.getCommandName() + " not supported bcoz " + e.getMessage());
+			e.printStackTrace();
 			return false;
 		}
+	}
+
+
+	private static Object quoteStringOptionValue(String defaultValue,
+			Class<?> dataType) {
+		if(String.class.equals(dataType)){
+			return "\"" + defaultValue +"\"";
+		}		
+		return defaultValue;
+	}
+
+
+	private static boolean isNumericStringOrBoolean(Class<?> dataType) {
+		if(Number.class.isAssignableFrom(dataType)
+				|| int.class.equals(dataType)
+				|| double.class.equals(dataType)
+				|| float.class.equals(dataType)
+				|| short.class.equals(dataType)
+				|| boolean.class.equals(dataType)
+				|| char.class.equals(dataType)
+				|| Boolean.class.equals(dataType)
+				|| Character.class.equals(dataType)			
+				|| String.class.equals(dataType)) {			
+			return true;
+		} else {			
+			return false;
+		}		
 	}
 
 

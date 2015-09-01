@@ -21,6 +21,7 @@ import com.gemstone.gemfire.management.ManagementService;
 import com.gemstone.gemfire.management.cli.Result.Status;
 import com.gemstone.gemfire.management.internal.cli.CommandManager;
 import com.github.geek29.geodethrift.management.commandResult.CommandResult;
+import com.github.geek29.geodethrift.management.commandResult.commandResultConstants;
 import com.github.geek29.geodethrift.management.service.GeodeCommandService;
 import com.github.geek29.geodethrift.management.structs.GetArgs;
 import com.github.geek29.geodethrift.management.structs.PutArgs;
@@ -274,13 +275,13 @@ public class GeodeManagementHandlerTest {
 			PutArgs put = createPut();
 			CommandResult result = handler.put(put);
 			System.out.println("Result " + result);
-			assertEquals(Status.OK.ordinal(),result.status);
+			assertEquals(commandResultConstants.COMMAND_STATUS_OK,result.status);
 			GetArgs get = new GetArgs();
 			get.key = put.key;
 			get.region = put.region;
 			result = handler.get(get);
 			System.out.println("Result " + result);
-			assertEquals(Status.OK.ordinal(),result.status);
+			assertEquals(commandResultConstants.COMMAND_STATUS_OK,result.status);
 		} catch (TException e) {
 			fail(e.getMessage());
 		}
@@ -382,7 +383,7 @@ public class GeodeManagementHandlerTest {
 		try {
 			CommandResult result = handler.put(createPut());
 			System.out.println("Result " + result);
-			assertEquals(Status.OK.ordinal(),result.status);			
+			assertEquals(commandResultConstants.COMMAND_STATUS_OK,result.status);			
 		} catch (TException e) {
 			fail(e.getMessage());
 		}
@@ -396,7 +397,7 @@ public class GeodeManagementHandlerTest {
 			query.query = "select * from /region1";
 			CommandResult result = handler.query(query);
 			System.out.println("Query Result " + result);
-			assertEquals(Status.OK.ordinal(), result.status);
+			assertEquals(commandResultConstants.COMMAND_STATUS_OK, result.status);
 		} catch (TException e) {
 			fail(e.getMessage());
 		}

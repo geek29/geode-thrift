@@ -14,9 +14,10 @@ struct AlterDiskStoreArgs {
 	11:optional string lruAlgorthm,
 	12:optional i32 lruLimit,
 	13:optional bool offHeap,
-	14:optional bool remove
+	14:optional bool remove = false
 
 }
+
 struct AlterRegionArgs {
 	1:i16 argsId=2,
 	2:string name,
@@ -38,6 +39,7 @@ struct AlterRegionArgs {
 	18:optional i32 evictionMax
 
 }
+
 struct AlterRuntimeArgs {
 	1:i16 argsId=3,
 	2:optional string member,
@@ -57,19 +59,22 @@ struct AlterRuntimeArgs {
 	16:optional i32 searchTimeout
 
 }
+
 struct BackupDiskStoreArgs {
 	1:i16 argsId=4,
 	2:string dir,
 	3:optional string baselineDir
 
 }
+
 struct ChangeLoglevelArgs {
 	1:i16 argsId=5,
 	2:optional list<string> members,
 	3:optional list<string> groups,
-	4:string loglevel
+	4:string loglevel = ""
 
 }
+
 struct CloseDurableClientArgs {
 	1:i16 argsId=6,
 	2:string durableClientId,
@@ -77,6 +82,7 @@ struct CloseDurableClientArgs {
 	4:optional string group
 
 }
+
 struct CloseDurableCqArgs {
 	1:i16 argsId=7,
 	2:string durableClientId,
@@ -85,12 +91,14 @@ struct CloseDurableCqArgs {
 	5:optional string group
 
 }
+
 struct CompactDiskStoreArgs {
 	1:i16 argsId=8,
 	2:string name,
 	3:optional list<string> group
 
 }
+
 struct CompactOfflineDiskStoreArgs {
 	1:i16 argsId=9,
 	2:string name,
@@ -99,6 +107,7 @@ struct CompactOfflineDiskStoreArgs {
 	5:optional list<string> J
 
 }
+
 struct ConfigurePdxArgs {
 	1:i16 argsId=10,
 	2:optional bool readSerialized,
@@ -108,48 +117,52 @@ struct ConfigurePdxArgs {
 	6:optional list<string> portableAutoSerializableClasses
 
 }
+
 struct CreateAsyncEventQueueArgs {
 	1:i16 argsId=11,
 	2:string id,
 	3:optional list<string> group,
-	4:optional bool parallel,
-	5:optional bool enableBatchConflation,
-	6:optional i32 batchSize,
-	7:optional i32 batchTimeInterval,
-	8:optional bool persistent,
+	4:optional bool parallel = false,
+	5:optional bool enableBatchConflation = false,
+	6:optional i32 batchSize = 100,
+	7:optional i32 batchTimeInterval = 1000,
+	8:optional bool persistent = false,
 	9:optional string diskStore,
-	10:optional bool diskSynchronous,
-	11:optional i32 maxQueueMemory,
-	12:optional i32 dispatcherThreads,
-	13:optional string orderPolicy,
+	10:optional bool diskSynchronous = true,
+	11:optional i32 maxQueueMemory = 100,
+	12:optional i32 dispatcherThreads = 1,
+	13:optional string orderPolicy = "KEY",
 	14:optional list<string> gatewayEventFilter,
 	15:optional string gatewayEventSubstitutionListener,
 	16:string listener,
 	17:optional list<string> listenerParam
 
 }
+
 struct CreateDefinedIndexesArgs {
 	1:i16 argsId=12,
 	2:optional string member,
 	3:optional string group
 
 }
+
 struct CreateDiskStoreArgs {
 	1:i16 argsId=13,
 	2:string name,
-	3:optional bool allowForceCompaction,
-	4:optional bool autoCompact,
-	5:optional i32 compactionThreshold,
-	6:optional i32 maxOplogSize,
-	7:optional i32 queueSize,
+	3:optional bool allowForceCompaction = false,
+	4:optional bool autoCompact = true,
+	5:optional i32 compactionThreshold = 50,
+	6:optional i32 maxOplogSize = 1024,
+	7:optional i32 queueSize = 0,
 	8:optional i64 timeInterval,
-	9:optional i32 writeBufferSize,
+	9:optional i32 writeBufferSize = 32768,
 	10:list<string> dir,
 	11:optional list<string> group,
-	12:optional double diskUsageWarningPercentage,
-	13:optional double diskUsageCriticalPercentage
+	12:optional double diskUsageWarningPercentage = 90,
+	13:optional double diskUsageCriticalPercentage = 99
 
 }
+
 struct CreateGatewayReceiverArgs {
 	1:i16 argsId=14,
 	2:optional list<string> group,
@@ -163,6 +176,7 @@ struct CreateGatewayReceiverArgs {
 	10:optional list<string> gatewayTransportFilter
 
 }
+
 struct CreateGatewaySenderArgs {
 	1:i16 argsId=15,
 	2:optional list<string> group,
@@ -187,6 +201,7 @@ struct CreateGatewaySenderArgs {
 	21:optional list<string> gatewayTransportFilter
 
 }
+
 struct CreateHdfsStoreArgs {
 	1:i16 argsId=16,
 	2:string name,
@@ -212,23 +227,25 @@ struct CreateHdfsStoreArgs {
 	22:optional list<string> group
 
 }
+
 struct CreateIndexArgs {
 	1:i16 argsId=17,
 	2:string name,
 	3:string expression,
 	4:string region,
 	5:optional string member,
-	6:optional string type,
+	6:optional string type = "range",
 	7:optional string group
 
 }
+
 struct CreateRegionArgs {
 	1:i16 argsId=18,
 	2:string name,
 	3:optional string type,
 	4:optional string templateRegion,
 	5:optional list<string> group,
-	6:optional bool skipIfExists,
+	6:optional bool skipIfExists = true,
 	7:optional list<string> asyncEventQueueId,
 	8:optional list<string> cacheListener,
 	9:optional string cacheLoader,
@@ -265,31 +282,36 @@ struct CreateRegionArgs {
 	40:optional string valueConstraint
 
 }
+
 struct DefineIndexArgs {
 	1:i16 argsId=19,
 	2:string name,
 	3:string expression,
 	4:string region,
-	5:optional string type
+	5:optional string type = "range"
 
 }
+
 struct DescribeConfigArgs {
 	1:i16 argsId=20,
 	2:string member,
-	3:optional bool hideDefaults
+	3:optional bool hideDefaults = true
 
 }
+
 struct DescribeDiskStoreArgs {
 	1:i16 argsId=21,
 	2:string member,
 	3:string name
 
 }
+
 struct DescribeMemberArgs {
 	1:i16 argsId=22,
 	2:string name
 
 }
+
 struct DescribeOfflineDiskStoreArgs {
 	1:i16 argsId=23,
 	2:string name,
@@ -298,17 +320,20 @@ struct DescribeOfflineDiskStoreArgs {
 	5:optional string region
 
 }
+
 struct DescribeRegionArgs {
 	1:i16 argsId=24,
 	2:string name
 
 }
+
 struct DestroyDiskStoreArgs {
 	1:i16 argsId=25,
 	2:string name,
 	3:optional list<string> group
 
 }
+
 struct DestroyFunctionArgs {
 	1:i16 argsId=26,
 	2:string id,
@@ -316,24 +341,28 @@ struct DestroyFunctionArgs {
 	4:optional string member
 
 }
+
 struct DestroyIndexArgs {
 	1:i16 argsId=27,
-	2:optional string name,
+	2:optional string name = "",
 	3:optional string region,
 	4:optional string member,
 	5:optional string group
 
 }
+
 struct DestroyRegionArgs {
 	1:i16 argsId=28,
 	2:string name
 
 }
+
 struct EncryptPasswordArgs {
 	1:i16 argsId=29,
 	2:string password
 
 }
+
 struct ExecuteFunctionArgs {
 	1:i16 argsId=30,
 	2:string id,
@@ -345,12 +374,14 @@ struct ExecuteFunctionArgs {
 	8:optional string filter
 
 }
+
 struct ExportClusterConfigurationArgs {
 	1:i16 argsId=31,
 	2:string zipFileName,
 	3:optional string dir
 
 }
+
 struct ExportConfigArgs {
 	1:i16 argsId=32,
 	2:optional string member,
@@ -358,6 +389,7 @@ struct ExportConfigArgs {
 	4:optional string dir
 
 }
+
 struct ExportDataArgs {
 	1:i16 argsId=33,
 	2:string region,
@@ -365,18 +397,20 @@ struct ExportDataArgs {
 	4:string member
 
 }
+
 struct ExportLogsArgs {
 	1:i16 argsId=34,
 	2:string dir,
 	3:optional list<string> group,
 	4:optional string member,
 	5:optional string logLevel,
-	6:optional bool onlyLogLevel,
-	7:optional bool mergeLog,
+	6:optional bool onlyLogLevel = false,
+	7:optional bool mergeLog = false,
 	8:optional string startTime,
 	9:optional string endTime
 
 }
+
 struct ExportOfflineDiskStoreArgs {
 	1:i16 argsId=35,
 	2:string name,
@@ -384,6 +418,7 @@ struct ExportOfflineDiskStoreArgs {
 	4:string dir
 
 }
+
 struct ExportStackTracesArgs {
 	1:i16 argsId=36,
 	2:optional string member,
@@ -391,42 +426,49 @@ struct ExportStackTracesArgs {
 	4:string file
 
 }
+
 struct GcArgs {
 	1:i16 argsId=37,
 	2:optional list<string> group,
 	3:optional string member
 
 }
+
 struct GetArgs {
 	1:i16 argsId=38,
 	2:string key,
 	3:string region,
 	4:optional string keyClass,
 	5:optional string valueClass,
-	6:optional bool loadOnCacheMiss
+	6:optional bool loadOnCacheMiss = true
 
 }
+
 struct HelpArgs {
 	1:i16 argsId=39,
 	2: string command
 
 }
+
 struct HintArgs {
 	1:i16 argsId=40,
 	2: string topic
 
 }
+
 struct HistoryArgs {
 	1:i16 argsId=41,
 	2:optional string file,
-	3:optional bool clear
+	3:optional bool clear = false
 
 }
+
 struct ListDeployedArgs {
 	1:i16 argsId=42,
 	2:optional string group
 
 }
+
 struct ListDurableCqsArgs {
 	1:i16 argsId=43,
 	2:string durableClientId,
@@ -434,6 +476,7 @@ struct ListDurableCqsArgs {
 	4:optional string group
 
 }
+
 struct ListFunctionsArgs {
 	1:i16 argsId=44,
 	2:optional string matches,
@@ -441,50 +484,58 @@ struct ListFunctionsArgs {
 	4:optional string member
 
 }
+
 struct ListGatewaysArgs {
 	1:i16 argsId=45,
 	2:optional string member,
 	3:optional string group
 
 }
+
 struct ListIndexesArgs {
 	1:i16 argsId=46,
-	2:optional bool withStats
+	2:optional bool withStats = false
 
 }
+
 struct ListMembersArgs {
 	1:i16 argsId=47,
-	2:optional string group
+	2:optional string group = ""
 
 }
+
 struct ListRegionsArgs {
 	1:i16 argsId=48,
 	2:optional string group,
 	3:optional string member
 
 }
+
 struct LoadBalanceGatewaySenderArgs {
 	1:i16 argsId=49,
 	2:string id
 
 }
+
 struct LocateEntryArgs {
 	1:i16 argsId=50,
 	2:string key,
 	3:string region,
 	4:optional string keyClass,
 	5:optional string valueClass,
-	6:optional bool recursive
+	6:optional bool recursive = false
 
 }
+
 struct NetstatArgs {
 	1:i16 argsId=51,
 	2:optional list<string> member,
 	3:optional string group,
 	4:optional string file,
-	5:optional bool withLsof
+	5:optional bool withLsof = false
 
 }
+
 struct PauseGatewaySenderArgs {
 	1:i16 argsId=52,
 	2:string id,
@@ -492,6 +543,7 @@ struct PauseGatewaySenderArgs {
 	4:optional string member
 
 }
+
 struct PdxRenameArgs {
 	1:i16 argsId=53,
 	2:string old,
@@ -500,6 +552,7 @@ struct PdxRenameArgs {
 	5:list<string> diskDirs
 
 }
+
 struct PutArgs {
 	1:i16 argsId=54,
 	2:string key,
@@ -507,32 +560,36 @@ struct PutArgs {
 	4:string region,
 	5:optional string keyClass,
 	6:optional string valueClass,
-	7:optional bool skipIfExists
+	7:optional bool skipIfExists = false
 
 }
+
 struct QueryArgs {
 	1:i16 argsId=55,
 	2:string query,
-	3:optional string stepName,
-	4:optional bool interactive
+	3:optional string stepName = "ALL",
+	4:optional bool interactive = true
 
 }
+
 struct RebalanceArgs {
 	1:i16 argsId=56,
 	2:optional list<string> includeRegion,
 	3:optional list<string> excludeRegion,
 	4:optional i64 timeOut,
-	5:optional bool simulate
+	5:optional bool simulate = false
 
 }
+
 struct RemoveArgs {
 	1:i16 argsId=57,
 	2:optional string key,
 	3:string region,
-	4:optional bool all,
+	4:optional bool all = false,
 	5:optional string keyClass
 
 }
+
 struct ResumeGatewaySenderArgs {
 	1:i16 argsId=58,
 	2:string id,
@@ -540,28 +597,33 @@ struct ResumeGatewaySenderArgs {
 	4:optional string member
 
 }
+
 struct RevokeMissingDiskStoreArgs {
 	1:i16 argsId=59,
 	2:string id
 
 }
+
 struct SetVariableArgs {
 	1:i16 argsId=61,
 	2:string name,
 	3:string value
 
 }
+
 struct ShowDeadLocksArgs {
 	1:i16 argsId=62,
 	2:string file
 
 }
+
 struct ShowLogArgs {
 	1:i16 argsId=63,
 	2:string member,
-	3:optional i32 lines
+	3:optional i32 lines = 0
 
 }
+
 struct ShowMetricsArgs {
 	1:i16 argsId=64,
 	2:optional string member,
@@ -571,6 +633,7 @@ struct ShowMetricsArgs {
 	6:optional list<string> categories
 
 }
+
 struct ShowSubscriptionQueueSizeArgs {
 	1:i16 argsId=65,
 	2:string durableClientId,
@@ -579,18 +642,21 @@ struct ShowSubscriptionQueueSizeArgs {
 	5:optional string group
 
 }
+
 struct ShutdownArgs {
 	1:i16 argsId=66,
-	2:optional i32 timeOut,
-	3:optional bool includeLocators
+	2:optional i32 timeOut = 10,
+	3:optional bool includeLocators = false
 
 }
+
 struct StatusGatewayReceiverArgs {
 	1:i16 argsId=67,
 	2:optional string group,
 	3:optional string member
 
 }
+
 struct StatusGatewaySenderArgs {
 	1:i16 argsId=68,
 	2:string id,
@@ -598,6 +664,7 @@ struct StatusGatewaySenderArgs {
 	4:optional string member
 
 }
+
 struct StatusLocatorArgs {
 	1:i16 argsId=69,
 	2:optional string name,
@@ -607,6 +674,7 @@ struct StatusLocatorArgs {
 	6:optional string dir
 
 }
+
 struct StatusServerArgs {
 	1:i16 argsId=70,
 	2:optional string name,
@@ -614,12 +682,14 @@ struct StatusServerArgs {
 	4:optional string dir
 
 }
+
 struct StopGatewayReceiverArgs {
 	1:i16 argsId=71,
 	2:optional string group,
 	3:optional string member
 
 }
+
 struct StopGatewaySenderArgs {
 	1:i16 argsId=72,
 	2:string id,
@@ -627,6 +697,7 @@ struct StopGatewaySenderArgs {
 	4:optional string member
 
 }
+
 struct StopLocatorArgs {
 	1:i16 argsId=73,
 	2:optional string name,
@@ -634,6 +705,7 @@ struct StopLocatorArgs {
 	4:optional string dir
 
 }
+
 struct StopServerArgs {
 	1:i16 argsId=74,
 	2:optional string name,
@@ -641,12 +713,14 @@ struct StopServerArgs {
 	4:optional string dir
 
 }
+
 struct UndeployArgs {
 	1:i16 argsId=75,
 	2:optional list<string> group,
 	3:optional string jar
 
 }
+
 struct UpgradeOfflineDiskStoreArgs {
 	1:i16 argsId=76,
 	2:string name,
@@ -655,14 +729,16 @@ struct UpgradeOfflineDiskStoreArgs {
 	5:optional list<string> J
 
 }
+
 struct ValidateOfflineDiskStoreArgs {
 	1:i16 argsId=77,
 	2:string name,
 	3:list<string> diskDirs
 
 }
+
 struct VersionArgs {
 	1:i16 argsId=78,
-	2:optional bool full
+	2:optional bool full = false
 
 }

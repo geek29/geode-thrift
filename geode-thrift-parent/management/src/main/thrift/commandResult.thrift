@@ -5,6 +5,9 @@ const string TABULAR_RESULT = "table"
 const string COMPOSITE_RESULT = "composite"
 const string ERROR_RESULT = "error"
 
+const i16 COMMAND_STATUS_OK = 0
+const i16 COMMAND_STATUS_ERROR = -1
+
 typedef list<string> Row
 
 struct InfoResult {

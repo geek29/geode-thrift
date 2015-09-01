@@ -92,9 +92,7 @@ public class ThriftProcessorTest extends GeodeManagementHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		//System.out.println("Client is now " + client);
 		this.handler = client;
-		//System.out.println("Handler is now " + handler);
 	}
 	
 }

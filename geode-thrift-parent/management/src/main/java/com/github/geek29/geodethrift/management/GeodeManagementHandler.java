@@ -4,6 +4,7 @@ import org.apache.thrift.TException;
 import org.json.JSONException;
 
 import com.github.geek29.geodethrift.management.commandResult.CommandResult;
+import com.github.geek29.geodethrift.management.service.CommandException;
 import com.github.geek29.geodethrift.management.service.GeodeCommandService.Iface;
 import com.github.geek29.geodethrift.management.structs.AlterDiskStoreArgs;
 import com.github.geek29.geodethrift.management.structs.AlterRegionArgs;
@@ -91,42 +92,45 @@ public class GeodeManagementHandler implements Iface {
 		executor = new CommandExecutor();
 	}
 	
-	private CommandResult execute(String cmd, Object args) throws TException {
+	private CommandResult execute(String cmd, Object args) throws CommandException, TException {
 		try {
 			CommandResult result = executor.execute(cmd, args);
 			return result;
 		} catch(JSONException e) {
-			throw new TException(e.getMessage());
+			throw new CommandException(cmd, "JSON Parsing issue : " + e.getMessage());
+		} catch(Exception e) { 
+			//Add exception cases here for parsing and other expected error during command execution
+			throw new TException(e);
 		}
 	}
 
 	@Override
 	public CommandResult alterDiskStore(AlterDiskStoreArgs arguments)
-			throws TException {		
+			throws CommandException, TException {		
 		return execute("alter disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult alterRegion(AlterRegionArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("alter region", arguments);
 	}
 
 	@Override
 	public CommandResult alterRuntime(AlterRuntimeArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("alter runtime ", arguments);
 	}
 
 	@Override
 	public CommandResult backupDiskStore(BackupDiskStoreArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("backup disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult changeLoglevel(ChangeLoglevelArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("change loglevel", arguments);
 	}
 
@@ -137,19 +141,19 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult closeDurableClient(CloseDurableClientArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("close durable-client", arguments);
 	}
 
 	@Override
 	public CommandResult closeDurableCq(CloseDurableCqArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("close durable-cq", arguments);
 	}
 
 	@Override
 	public CommandResult compactDiskStore(CompactDiskStoreArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("compact disk-store", arguments);
 	}
 
@@ -161,7 +165,7 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult configurePdx(ConfigurePdxArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("configure pdx", arguments);
 	}
 
@@ -173,13 +177,13 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult createDefinedIndexes(CreateDefinedIndexesArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("create defined indexes", arguments);
 	}
 
 	@Override
 	public CommandResult createDiskStore(CreateDiskStoreArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("create disk-store", arguments);
 	}
 
@@ -191,49 +195,49 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult createGatewaySender(CreateGatewaySenderArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("create gateway-sender", arguments);
 	}
 
 	@Override
 	public CommandResult createHdfsStore(CreateHdfsStoreArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("create hdfs-store", arguments);
 	}
 
 	@Override
 	public CommandResult createIndex(CreateIndexArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("create index", arguments);
 	}
 
 	@Override
 	public CommandResult createRegion(CreateRegionArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("create region", arguments);
 	}
 
 	@Override
 	public CommandResult defineIndex(DefineIndexArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("define index", arguments);
 	}
 
 	@Override
 	public CommandResult describeConfig(DescribeConfigArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("describe config", arguments);
 	}
 
 	@Override
 	public CommandResult describeDiskStore(DescribeDiskStoreArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("describe disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult describeMember(DescribeMemberArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("describe member", arguments);
 	}
 
@@ -245,43 +249,43 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult describeRegion(DescribeRegionArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("describe region", arguments);
 	}
 
 	@Override
 	public CommandResult destroyDiskStore(DestroyDiskStoreArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("destroy disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult destroyFunction(DestroyFunctionArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("destroy function", arguments);
 	}
 
 	@Override
 	public CommandResult destroyIndex(DestroyIndexArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("destroy index", arguments);
 	}
 
 	@Override
 	public CommandResult destroyRegion(DestroyRegionArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("destroy region", arguments);
 	}
 
 	@Override
 	public CommandResult encryptPassword(EncryptPasswordArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("encrypt password", arguments);
 	}
 
 	@Override
 	public CommandResult executeFunction(ExecuteFunctionArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("execute function", arguments);
 	}
 
@@ -293,7 +297,7 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult exportConfig(ExportConfigArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("export config", arguments);
 	}
 
@@ -315,7 +319,7 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult exportStackTraces(ExportStackTracesArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("export stack-traces", arguments);
 	}
 
@@ -356,7 +360,7 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult listDeployed(ListDeployedArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("list deployed", arguments);
 	}
 
@@ -367,37 +371,37 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult listDurableCqs(ListDurableCqsArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("list durable-cqs", arguments);
 	}
 
 	@Override
 	public CommandResult listFunctions(ListFunctionsArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("list functions", arguments);
 	}
 
 	@Override
 	public CommandResult listGateways(ListGatewaysArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("list gateways", arguments);
 	}
 
 	@Override
 	public CommandResult listIndexes(ListIndexesArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("list indexes", arguments);
 	}
 
 	@Override
 	public CommandResult listMembers(ListMembersArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("list members", arguments);
 	}
 
 	@Override
 	public CommandResult listRegions(ListRegionsArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("list regions", arguments);
 	}
 
@@ -409,7 +413,7 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult locateEntry(LocateEntryArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("locate entry", arguments);
 	}
 
@@ -420,7 +424,7 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult pauseGatewaySender(PauseGatewaySenderArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("pause gateway-sender", arguments);
 	}
 
@@ -451,7 +455,7 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult resumeGatewaySender(ResumeGatewaySenderArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("resume gateway-sender", arguments);
 	}
 
@@ -463,13 +467,13 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult setVariable(SetVariableArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("set variable", arguments);
 	}
 
 	@Override
 	public CommandResult showDeadLocks(ShowDeadLocksArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("show dead-locks", arguments);
 	}
 
@@ -480,7 +484,7 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult showMetrics(ShowMetricsArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("show metrics", arguments);
 	}
 
@@ -513,64 +517,64 @@ public class GeodeManagementHandler implements Iface {
 
 	@Override
 	public CommandResult statusGatewaySender(StatusGatewaySenderArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("status gateway-sender", arguments);
 	}
 
 	@Override
 	public CommandResult statusLocator(StatusLocatorArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("status locator", arguments);
 	}
 
 	@Override
 	public CommandResult statusServer(StatusServerArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("status server", arguments);
 	}
 
 	@Override
 	public CommandResult stopGatewayReceiver(StopGatewayReceiverArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("stop gateway-receiver", arguments);
 	}
 
 	@Override
 	public CommandResult stopGatewaySender(StopGatewaySenderArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("stop gateway-sender", arguments);
 	}
 
 	@Override
 	public CommandResult stopLocator(StopLocatorArgs arguments)
-			throws TException {
+			throws CommandException, TException {
 		return execute("stop locator", arguments);
 	}
 
 	@Override
-	public CommandResult stopServer(StopServerArgs arguments) throws TException {
+	public CommandResult stopServer(StopServerArgs arguments) throws CommandException, TException {
 		return execute("stop server", arguments);
 	}
 
 	@Override
-	public CommandResult undeploy(UndeployArgs arguments) throws TException {
+	public CommandResult undeploy(UndeployArgs arguments) throws CommandException, TException {
 		return execute("undeploy", arguments);
 	}
 
 	@Override
 	public CommandResult upgradeOfflineDiskStore(
-			UpgradeOfflineDiskStoreArgs arguments) throws TException {
+			UpgradeOfflineDiskStoreArgs arguments) throws CommandException, TException {
 		return execute("upgrade offline-disk-store", arguments);
 	}
 
 	@Override
 	public CommandResult validateOfflineDiskStore(
-			ValidateOfflineDiskStoreArgs arguments) throws TException {
+			ValidateOfflineDiskStoreArgs arguments) throws CommandException, TException {
 		return execute("validate offline-disk-store", arguments);
 	}
 
 	@Override
-	public CommandResult version(VersionArgs arguments) throws TException {
+	public CommandResult version(VersionArgs arguments) throws CommandException, TException {
 		return execute("version", arguments);
 	}	
 

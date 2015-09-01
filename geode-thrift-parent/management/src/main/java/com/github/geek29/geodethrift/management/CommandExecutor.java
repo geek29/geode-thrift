@@ -16,10 +16,10 @@ import com.gemstone.gemfire.management.internal.cli.result.CommandResult;
 
 /**
  * TODO : Cache all field introspection or do it at start-up
- * TODO : Declare CommandException
- * TODO : Add default values for fields in structs
+ * TODO : Declare CommandException :DONE
+ * TODO : Add default values for fields in structs : DONE
  * TODO : Support binary data types used in Deploy and other commands
- * TODO : Add CommandStatus constants in Thrift
+ * TODO : Add CommandStatus constants in Thrift : DONE
  * TODO : Add methods in command service for things like member names, etc 
  * 			to provide same facility as provided by GFSH auto-completion
  * @author tushark

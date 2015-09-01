@@ -1,8 +1,9 @@
 namespace java com.github.geek29.geodethrift.management.service
 
-
-service BaseService {
-
+/*
+	Service to return basic information about Geode Distributed System
+*/
+service GeodeDSInfoService {
 	list<string> listMembers();
 	list<string> listGroups();
 	list<string> listLocators();
@@ -13,7 +14,4 @@ service BaseService {
 	list<string> listGatewaySenders();
 	list<string> listGatewayReceivers();
 	string getAlertLevel();
-	i32 getTotalDiskUsage();
-	i32 getUsedHeapSize();
-
 }

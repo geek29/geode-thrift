@@ -1,5 +1,5 @@
 
-
+/*
 clear
 containsKey
 put
@@ -20,3 +20,4 @@ cq : how to push events to clients
 
 for domain objects which have their own thrift definitons provide code-generator
 and a generic hander which converts the thrift struct into pdxinstance
+*/

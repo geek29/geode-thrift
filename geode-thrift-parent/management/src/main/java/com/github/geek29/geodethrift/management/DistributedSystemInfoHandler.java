@@ -10,6 +10,10 @@ import com.gemstone.gemfire.management.DistributedSystemMXBean;
 import com.gemstone.gemfire.management.ManagementService;
 import com.github.geek29.geodethrift.management.service.GeodeDSInfoService.Iface;
 
+/*
+ * TODO : Write Test for this class
+ * 
+ */
 public class DistributedSystemInfoHandler implements Iface {
 	
 	private DistributedSystemMXBean dsMxBean = null;

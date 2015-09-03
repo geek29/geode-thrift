@@ -1,7 +1,9 @@
 package com.github.geek29.geodethrift.cache;
 
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -10,11 +12,12 @@ import org.apache.thrift.meta_data.FieldMetaData;
 
 import com.gemstone.gemfire.pdx.PdxInstance;
 import com.gemstone.gemfire.pdx.PdxInstanceFactory;
+import com.github.geek29.geodethrift.cache.FieldWriters.FieldWriter;
 
 public class ThriftPDXInstance {
 	
 	//package level for testing
-	static Map<Class,Map<String,Writer>> metadataMap = new HashMap<Class,Map<String,Writer>>();	
+	static Map<Class,Map<String,FieldWriter>> metadataMap = new HashMap<Class,Map<String,FieldWriter>>();	
 	
 	private PdxInstanceFactory factory = null;
 	
@@ -27,36 +30,68 @@ public class ThriftPDXInstance {
 	}
 	
 	//package level for testing
-	void introspectClass(TBase tbase) throws IllegalArgumentException,
+	static void introspectClass(TBase tbase) throws IllegalArgumentException,
 			IllegalAccessException, NoSuchFieldException, SecurityException {
 		if(metadataMap.containsKey(tbase.getClass()))
 			return;
 		
-		System.out.println("introspectClass Tbase class  " + tbase.getClass());
+		
 		
 		synchronized (tbase.getClass()) {
-			Map<String,Writer> writerMap = new HashMap<String,Writer>();
+			Map<String,FieldWriter> writerMap = new HashMap<String,FieldWriter>();
 			Map<String,Field> fieldMap = new HashMap<String,Field>();
 			for(Field f : tbase.getClass().getDeclaredFields()){
 				if(f.getName().equals("metaDataMap")) {
 					Map<?,FieldMetaData> metaDataMap = (Map<?,FieldMetaData>) f.get(tbase);
 					for(FieldMetaData mtdt : metaDataMap.values()) {			
 						Field getter = tbase.getClass().getField(mtdt.fieldName);
-						Writer writer = writerMap.get(getter.getType());
+						FieldWriter writer = getWriter(getter.getType(),getter);
 						writerMap.put(mtdt.fieldName, writer);
 						fieldMap.put(mtdt.fieldName,getter);
 					}
 				}
 			}
+			System.out.println("introspectClass Tbase class  " + tbase.getClass()+"\n " +writerMap);
 			metadataMap.put(tbase.getClass(), writerMap);
 		}		
 	}
 
+	private static FieldWriter getWriter(Class<?> type, Field f) {
+		if(int.class.equals(type)){
+			return new FieldWriters.IntWriter(f);
+		} else if(byte.class.equals(type)) {
+			return new FieldWriters.ByteWriter(f);
+		} else if(short.class.equals(type)) {
+			return new FieldWriters.ShortWriter(f);
+		} else if (long.class.equals(type)) {
+			return new FieldWriters.LongWriter(f);
+		} else if (float.class.equals(type)) {
+			return new FieldWriters.FloatWriter(f);
+		} else if (double.class.equals(type)) {
+			return new FieldWriters.DoubleWriter(f);
+		} else if (char.class.equals(type)) {
+			return new FieldWriters.CharWriter(f);
+		} else if (boolean.class.equals(type)) {
+			return new FieldWriters.BooleanWriter(f);
+		} else if (String.class.equals(type)) {
+			return new FieldWriters.StringWriter(f);
+		} else if (Map.class.equals(type)) {
+			return new FieldWriters.ListAndMapWriter(f);
+		} else if (List.class.equals(type)) {
+			return new FieldWriters.ListAndMapWriter(f);
+		} else if (ByteBuffer.class.equals(type)) {
+			//Need special care here TODO
+			return new FieldWriters.ByteWriter(f);
+		}
+		return null;
+	}
+
 	private void addToPDX(TBase tbase) throws NoSuchFieldException, SecurityException, 
 		IllegalArgumentException, IllegalAccessException  {		
-		Map<String,Writer> writeMap = metadataMap.get(tbase.getClass());
-		for(Entry<String,Writer> entry : writeMap.entrySet()) {			
-			Writer writer = entry.getValue();			
+		Map<String,FieldWriter> writeMap = metadataMap.get(tbase.getClass());
+		for(Entry<String,FieldWriter> entry : writeMap.entrySet()) {			
+			FieldWriter writer = entry.getValue();
+			System.out.println("Getting value for field " + entry.getKey());
 			writer.write(factory, tbase);								
 		}		
 	}
@@ -69,89 +104,4 @@ public class ThriftPDXInstance {
 		return factory.create();
 	}
 	
-	public static class WriterException extends RuntimeException {
-
-		public WriterException(Exception e) {
-			super(e);
-		}
-		
-	}
-	
-	public static interface Writer {
-		public void write(PdxInstanceFactory factory, Object object);
-	}
-	
-	
-	/*	
-	Below taken from PdxInstanceFactory
-	 
-	Write following writers : 
-	
-		writeChar(String, char)
-		writeBoolean(String, boolean)
-		writeByte(String, byte)
-		writeShort(String, short)
-		writeInt(String, int)
-		writeLong(String, long)
-		writeFloat(String, float)
-		writeDouble(String, double)
-		writeString(String, String)
-		
-		writeDate(String, Date) - NotRequired
-		writeBooleanArray(String, boolean[]) - NotRequired thrift only supports lists and maps
-		writeCharArray(String, char[]) - NotRequired thrift only supports lists and maps
-		writeByteArray(String, byte[]) - NotRequired thrift only supports lists and maps
-		writeShortArray(String, short[]) - NotRequired thrift only supports lists and maps
-		writeIntArray(String, int[]) - NotRequired thrift only supports lists and maps
-		writeLongArray(String, long[]) - NotRequired thrift only supports lists and maps
-		writeFloatArray(String, float[]) - NotRequired thrift only supports lists and maps
-		writeDoubleArray(String, double[]) - NotRequired thrift only supports lists and maps
-		writeStringArray(String, String[]) - NotRequired thrift only supports lists and maps
-		writeObjectArray(String, Object[]) - NotRequired thrift only supports lists and maps
-		writeArrayOfByteArrays(String, byte[][]) - Need to see how binary is treated in Thrift	
-	*/
-	
-	public static class IntWriter implements Writer {		
-		
-		private Field field=null;
-		
-		public IntWriter(Field field) {
-			this.field = field;
-		}
-
-		@Override
-		public void write(PdxInstanceFactory factory, Object object) {
-			try {
-				int value = field.getInt(object);
-				factory.writeInt(field.getName(), value);
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				throw new WriterException(e);
-			}			
-		}		
-	}
-	
-	public static class TBaseWriter implements Writer {
-				
-		private Field field=null;
-		
-		public TBaseWriter(Field field) {
-			this.field = field;
-		}
-		
-		public void write(PdxInstanceFactory factory, Object object) {
-			TBase inner;
-			try {
-				inner = (TBase) field.get(object);
-				ThriftPDXInstance instance = new ThriftPDXInstance(inner, factory);
-				factory.writeObject(field.getName(), instance.getPDXInstance());	
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				throw new WriterException(e);
-			} catch (NoSuchFieldException e) {
-				throw new WriterException(e);
-			} catch (SecurityException e) {
-				throw new WriterException(e);
-			}			
-		}
-	}
-
 }

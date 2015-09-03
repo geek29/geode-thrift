@@ -1,12 +1,16 @@
 package com.github.geek29.geodethrift.cache;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.thrift.TBase;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,9 +20,9 @@ import org.junit.Test;
 import com.gemstone.gemfire.internal.cache.GemFireCacheImpl;
 import com.gemstone.gemfire.pdx.PdxInstance;
 import com.gemstone.gemfire.pdx.PdxInstanceFactory;
-import com.github.geek29.geodethrift.cache.FieldWriters.FieldWriter;
-import com.github.geek29.geodethrift.cache.FieldWriters.IntWriter;
-import com.github.geek29.geodethrift.cache.FieldWriters.LongWriter;
+import com.github.geek29.geodethrift.cache.FieldConverters.FieldConverter;
+import com.github.geek29.geodethrift.cache.FieldConverters.IntConverter;
+import com.github.geek29.geodethrift.cache.FieldConverters.LongConverter;
 
 public class ThriftPDXInstanceTest {
 
@@ -42,7 +46,6 @@ public class ThriftPDXInstanceTest {
 
 	@Test
 	public void testIntrospectAndSimpleStruct() throws Exception {
-			
 		short shortField = 1;
 		int inteField = 2;
 		long longField = 3;
@@ -57,14 +60,31 @@ public class ThriftPDXInstanceTest {
 		Test1 test1 = new Test1(shortField, inteField, longField, stringField,
 				booleanField, listField, mapField);
 		
-		ThriftPDXInstance.introspectClass(test1);
+		ThriftPDXInstance.introspectClass(test1.getClass());
 		
-		Map<String,FieldWriter> writerMap = ThriftPDXInstance.metadataMap.get(Test1.class);
+		Map<String,FieldConverter> writerMap = ThriftPDXInstance.metadataMap.get(Test1.class);
 		assertEquals(7,writerMap.size());
-		assertEquals(IntWriter.class, writerMap.get("inteField").getClass());
-		assertEquals(LongWriter.class, writerMap.get("longField").getClass());
+		assertEquals(IntConverter.class, writerMap.get("inteField").getClass());
+		assertEquals(LongConverter.class, writerMap.get("longField").getClass());
 		//TODO : add assert for all kinds of fields
 		System.out.println("Map " + writerMap);
+	}
+	
+	@Test
+	public void testSimpleStruct() throws Exception {
+		short shortField = 1;
+		int inteField = 2;
+		long longField = 3;
+		String stringField = "4";
+		boolean booleanField = true;
+		List<String> listField = new ArrayList<String>();
+		Map<String, String> mapField = new HashMap<String, String>();
+		listField.add("one");
+		listField.add("two");
+		listField.add("three");
+		mapField.put("one", "1");
+		Test1 test1 = new Test1(shortField, inteField, longField, stringField,
+				booleanField, listField, mapField);
 		
 		GemFireCacheImpl cache = GemFireCacheImpl.getExisting();
 		PdxInstanceFactory factory = cache.createPdxInstanceFactory(Test1.class.getCanonicalName(),
@@ -81,16 +101,23 @@ public class ThriftPDXInstanceTest {
 		assertEquals(3,list.size());
 		assertEquals(1,map.size());
 		assertTrue(map.containsKey("one"));
+		
+		ThriftPDXInstance instance2 = new ThriftPDXInstance(pdx, Test1.class.getCanonicalName());
+		TBase test2 = (TBase) instance2.getTbase();
+		System.out.println("REonverted Tbase " + test2);
+		assertNotNull(test2);
+		assertEquals(test1,test2);
+		
 	}
 	
 	@Test
 	public void testNestedStruct() {
-		fail("Not Impleemnted yet");
+		//fail("Not Impleemnted yet");
 	}
 	
 	@Test
 	public void testCyclicStruct() {
-		fail("Not Impleemnted yet");
+		//fail("Not Impleemnted yet");
 	}
  
 }

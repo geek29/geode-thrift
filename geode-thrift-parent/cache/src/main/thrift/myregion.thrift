@@ -39,6 +39,8 @@ service ThriftStructRegionService {
 	
 	ThriftStruct put(1:string region, 2:binary key, 3:ThriftStruct value)  throws (1:region.CacheException e),
 	
+	ThriftStruct get(1:string region, 2:binary key)  throws (1:region.CacheException e),
+	
 	ThriftStruct remove(1:string region, 2:binary key)  throws (1:region.CacheException e),
 	
 	void invalidate(1:string region, 2:binary key)  throws (1:region.CacheException e),

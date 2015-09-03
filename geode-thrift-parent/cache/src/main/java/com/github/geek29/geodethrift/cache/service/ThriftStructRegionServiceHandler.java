@@ -24,6 +24,8 @@ public class ThriftStructRegionServiceHandler extends RegionServiceHandler<ByteB
 
 	@Override
 	protected PdxInstance transformValueToGeode(ThriftStruct value) throws CacheException {
+		if(value==null)
+			return null;
 		PdxInstanceFactory factory = cache.createPdxInstanceFactory(value.getClass().getCanonicalName(),
 				false);		
 		try {
@@ -37,6 +39,8 @@ public class ThriftStructRegionServiceHandler extends RegionServiceHandler<ByteB
 
 	@Override
 	protected ThriftStruct transformValueToThrift(PdxInstance putReturn) {
+		if(putReturn==null)
+			return null;
 		/*try {
 			ThriftPDXInstance instance = new ThriftPDXInstance(putReturn);
 			return instance.getThriftStruct();

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import org.apache.thrift.TBase;
 
+import com.gemstone.gemfire.pdx.PdxInstance;
 import com.gemstone.gemfire.pdx.PdxInstanceFactory;
 
 public class FieldWriters {
@@ -222,7 +223,12 @@ public class FieldWriters {
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				throw new WriterException(e);
 			}			
-		}		
+		}
+		
+		public void read(PdxInstance pdx) {
+			String str = (String) pdx.getField(field.getName());
+			//field.set(tbase, str);
+		}
 	}
 	
 	public static class ListAndMapWriter implements FieldWriter {		

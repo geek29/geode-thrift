@@ -14,6 +14,8 @@ service RegionService {
 	
 	binary put(1:string region, 2:binary key, 3:binary value)  throws (1:CacheException e),
 	
+	binary get(1:string region, 2:binary key)  throws (1:CacheException e),
+	
 	binary remove(1:string region, 2:binary key)  throws (1:CacheException e),
 	
 	void invalidate(1:string region, 2:binary key)  throws (1:CacheException e),
@@ -47,6 +49,8 @@ service JSONRegionService {
 	bool containsKey(1:string region, 2:binary key)  throws (1:CacheException e),
 	
 	string put(1:string region, 2:binary key, 3:string value)  throws (1:CacheException e),
+	
+	string get(1:string region, 2:binary key)  throws (1:CacheException e),
 	
 	string remove(1:string region, 2:binary key)  throws (1:CacheException e),
 	

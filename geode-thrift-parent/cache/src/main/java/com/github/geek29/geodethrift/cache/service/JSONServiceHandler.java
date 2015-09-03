@@ -17,11 +17,15 @@ public class JSONServiceHandler extends RegionServiceHandler<ByteBuffer,String, 
 
 	@Override
 	protected PdxInstance transformValueToGeode(String key) {
+		if(key==null)
+			return null;
 		return JSONFormatter.fromJSON(key);
 	}
 
 	@Override
-	protected String transformValueToThrift(PdxInstance putReturn) {		
+	protected String transformValueToThrift(PdxInstance putReturn) {
+		if(putReturn==null)
+			return null;
 		return JSONFormatter.toJSON(putReturn);
 	}
 

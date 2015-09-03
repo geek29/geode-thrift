@@ -30,7 +30,64 @@ public class RegionServiceTest {
 	@After
 	public void tearDown() throws Exception {
 	}
-
+	
+	@Test
+	public void testClear() {
+		
+	}
+	
+	@Test
+	public void testContainsKey() {
+		
+	}
+	
+	@Test
+	public void testPut() {
+		
+	}
+	
+	@Test
+	public void testRemove() {
+		
+	}
+	
+	@Test
+	public void testInvalidate() {
+		
+	}
+	
+	@Test
+	public void testDestroyRegion() {
+		
+	}
+	
+	@Test
+	public void testGetAll() {
+		
+	}
+	
+	@Test
+	public void testPutAll() {
+		
+	}
+	
+	@Test
+	public void testRemoveAll() {
+		
+	}
+	
+	@Test
+	public void testKeySet() {
+		
+	}
+	
+	@Test
+	public void testSize() {
+		
+	}
+	
+	
+	
 	@Test
 	public void test() {
 		Region region = GeodeTestHelper.createRegion("region1",

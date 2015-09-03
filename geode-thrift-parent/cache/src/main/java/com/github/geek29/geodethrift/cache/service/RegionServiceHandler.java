@@ -109,6 +109,17 @@ public abstract class RegionServiceHandler<TK,TV, GK,GV>  {
 			throw new TException(e);
 		}
 	}
+	
+	public TV get(String region, TK key)
+			throws CacheException, TException {
+		try {
+			GV putReturn = (GV) getRegion(region, "put").get(
+					transformKeyToGeode(key));
+			return transformValueToThrift(putReturn);
+		} catch (com.gemstone.gemfire.cache.CacheException e) {
+			throw new TException(e);
+		}
+	}
 
 	public TV remove(String region, TK key)
 			throws CacheException, TException {

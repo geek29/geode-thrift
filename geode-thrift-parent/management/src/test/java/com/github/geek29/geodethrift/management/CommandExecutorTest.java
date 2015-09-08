@@ -1,9 +1,7 @@
 package com.github.geek29.geodethrift.management;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.Map;
 import java.util.Properties;
@@ -104,8 +102,18 @@ public class CommandExecutorTest {
 		assertTrue(command.contains(" --value=v1"));
 		assertTrue(command.contains(" --region=/region1"));
 		assertTrue(command.contains(" --skip-if-exists=false"));
-		
-		
+	}
+	
+	@Test
+	public void testCommandStringWithDefaults() {
+		CommandExecutor executor = new CommandExecutor();
+		PutArgs args = 	new PutArgs();
+		String command = executor.commandString("put", executor.introspect(args));		
+		assertTrue(command.contains("put"));
+		assertFalse(command.contains(" --key=k1"));
+		assertFalse(command.contains(" --value=v1"));
+		assertFalse(command.contains(" --region=/region1"));
+		assertTrue(command.contains(" --skip-if-exists=false"));
 	}
 	
 	@Test

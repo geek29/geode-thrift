@@ -1,0 +1,77 @@
+SparkSQL
+
+1. objective is write less code let optimizer figure out best way to execute
+2. faster execution
+3. read less data
+4. support all kinds of formats
+
+Snappy Additions
+1. Added SQL extensions for stream
+2. Sampling of DF and present sampled DF
+3. Appendable ExternalStore
+4. OLTP Store as columnar store
+5. OLTP is available for join with OLAP queries. OLTP tables can be mutated
+
+Streaming extensions
+	foreachrdd { rdd =>
+		df = makeDF(rdd)
+		insertIntoStore(df)
+	}
+	
+sql - write data-source API for PDXInstance
+
+sampling - reservoir sampling
+
+
+State
+1. Shared Memory (/dev/shm, tmpfs)
+2. Memory Mapped Files
+3. OffHeap - https://github.com/OpenHFT/Chronicle-Map
+	Great article : http://www.infoq.com/articles/Open-JDK-and-HashMap-Off-Heap
+
+What Spark needs?
+
+Big issue with Spark is that it does not have any state. This is due to fact that
+each job gets its own executor processes which run tasks in its own thread-pool.
+So data cached locally - either through Spark cache() mechanism or cached locally
+(using either say hashmap or some sort of in-memory cache) get lost when executors
+die.
+
+But why do we need state. Mostly to share data between jobs. If same hadoop files
+are read by different jobs why not cache it in memory. But as executors die all memory
+contents will be lost. There are two solutions for this
+
+1. Save data explicitely into in-memory grid after you read it in first job
+2. Read the data from in-memory grid in subsequent jobs
+
+So you will have colocated long running processes on each of the executor machines.
+Lets call this process as LRP
+
+To take this model further, why not put both LRP process and executor in the
+same process? This will require change in the spark-cluster-model.
+
+Spark scheduling works loosly based on following algoritm.
+
+1. Driver connects to master and request executors
+2. Master starts executor VMs through worker nodes. Executor connect to drivers after which
+   driver puts all required jars on each executor
+3. Driver then sends tasks derived from the input-job to the executors
+
+To modify the cluster model we basically will need following changes
+1. Master process is running inside one of LRP nodes
+2. Driver connects to master process and requests executor nodes. Master through LRP starts
+   executor nodes either in the same process or spawns another local process
+3. Executor connect to drivers after which driver puts all required jars on each executor
+4. Driver then sends tasks derived from the input-job to the executors. Whenever job refers
+   to the data required its read through mechanism provided by LRP
+   
+LRP Mechanism to read the data
+1. Shared Memory (/dev/shm, tmpfs)
+2. Memory Mapped Files
+3. OffHeap - https://github.com/OpenHFT/Chronicle-Map
+4. Same process (executor is just another thread in LRP)
+   
+
+
+		
+

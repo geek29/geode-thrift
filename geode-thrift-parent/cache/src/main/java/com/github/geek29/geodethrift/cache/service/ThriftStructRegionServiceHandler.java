@@ -38,17 +38,20 @@ public class ThriftStructRegionServiceHandler extends RegionServiceHandler<ByteB
 	}
 
 	@Override
-	protected ThriftStruct transformValueToThrift(PdxInstance putReturn) {
+	protected ThriftStruct transformValueToThrift(PdxInstance putReturn) throws CacheException {
 		if(putReturn==null)
 			return null;
-		/*try {
-			ThriftPDXInstance instance = new ThriftPDXInstance(putReturn);
-			return instance.getThriftStruct();
+		try {
+			ThriftPDXInstance instance = new ThriftPDXInstance(putReturn,ThriftStruct.class);
+			return (ThriftStruct) instance.getTbase();
 		} catch (IllegalArgumentException | IllegalAccessException
 				| NoSuchFieldException | SecurityException e) {			
-			throw new CacheException("transformValueToGeode",e.getMessage());
-		}*/
-		return null;
+			throw new CacheException("transformValueToThrift",e.getMessage());
+		} catch (ClassNotFoundException e) {
+			throw new CacheException("transformValueToThrift",e.getMessage());
+		} catch (InstantiationException e) {
+			throw new CacheException("transformValueToThrift",e.getMessage());
+		}
 	}
 
 	@Override

@@ -5,6 +5,17 @@ SparkSQL
 3. read less data
 4. support all kinds of formats
 
+
+
+http://www.trongkhoanguyen.com/2015/08/sparksql-internals.html
+http://hxquangnhat.com/page/2/
+http://hxquangnhat.com/2015/04/10/sparksql-internals-part-1-sqlcontext/
+
+Blogs:
+1. ExternalBlock Store based on Geode
+2. Sql data-source for geode
+3. Modify scheduler backend for geode
+
 Snappy Additions
 1. Added SQL extensions for stream
 2. Sampling of DF and present sampled DF
@@ -39,7 +50,7 @@ die.
 
 But why do we need state. Mostly to share data between jobs. If same hadoop files
 are read by different jobs why not cache it in memory. But as executors die all memory
-contents will be lost. There are two solutions for this
+contents will be lost. Solutions for this would be
 
 1. Save data explicitely into in-memory grid after you read it in first job
 2. Read the data from in-memory grid in subsequent jobs
@@ -57,20 +68,31 @@ Spark scheduling works loosly based on following algoritm.
    driver puts all required jars on each executor
 3. Driver then sends tasks derived from the input-job to the executors
 
-To modify the cluster model we basically will need following changes
+To have caching enabled the cluster model we basically will need following changes
 1. Master process is running inside one of LRP nodes
 2. Driver connects to master process and requests executor nodes. Master through LRP starts
    executor nodes either in the same process or spawns another local process
-3. Executor connect to drivers after which driver puts all required jars on each executor
+3. Executors connect to driver after which driver puts all required jars on each executor
 4. Driver then sends tasks derived from the input-job to the executors. Whenever job refers
-   to the data required its read through mechanism provided by LRP
+   to the data required its read through caching mechanism provided by LRP
    
-LRP Mechanism to read the data
+LRP caching mechanism can employ any of the standard techniques for Shared Memory
 1. Shared Memory (/dev/shm, tmpfs)
 2. Memory Mapped Files
-3. OffHeap - https://github.com/OpenHFT/Chronicle-Map
+3. OffHeap(https://github.com/OpenHFT/Chronicle-Map)
 4. Same process (executor is just another thread in LRP)
-   
+
+Lets have common interface for caching mechanism
+
+	public interface CachingMechanism {
+
+		def cache(index : Int, rdd : RDD[T], name : String)
+		
+		def scan(name : String, index : Int) : Iterator[String] 
+
+	}
+
+Implement a RDD operation for    
 
 
 		
